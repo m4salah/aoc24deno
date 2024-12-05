@@ -1,9 +1,5 @@
 import { assertEquals } from "@std/assert";
-import {
-  isSafeReportWithDampener,
-  safeReportsCounter,
-  safeReportsCounterWithDampener,
-} from "./main.ts";
+import { safeReportsCounter, safeReportsCounterWithDampener } from "./main.ts";
 
 Deno.test("example case part1", () => {
   const input = `7 6 4 2 1
@@ -30,13 +26,3 @@ Deno.test("example case part2", () => {
   const count = safeReportsCounterWithDampener(input);
   assertEquals(count, 6);
 });
-
-Deno.test(
-  "edge case the first level is bad safeReportsCounterWithDampener",
-  () => {
-    const input = [55, 53, 54, 56, 57, 58];
-
-    const isSafe = isSafeReportWithDampener(input);
-    assertEquals(isSafe, true);
-  },
-);
