@@ -1,5 +1,5 @@
 import { assertEquals } from "@std/assert";
-import { countXMAS } from "./main.ts";
+import { countX_MAS, countXMAS } from "./main.ts";
 
 Deno.test(function addTest() {
   assertEquals(
@@ -25,5 +25,30 @@ S.S.S.S.SS
 ..M.M.M.MM
 .X.X.XMASX`),
     18,
+  );
+});
+
+Deno.test(function addTest() {
+  assertEquals(
+    countX_MAS(`M.S
+.A.
+M.S`),
+    1,
+  );
+});
+
+Deno.test(function addTest() {
+  assertEquals(
+    countX_MAS(`.M.S......
+..A..MSMS.
+.M.S.MAA..
+..A.ASMSM.
+.M.S.M....
+..........
+S.S.S.S.S.
+.A.A.A.A..
+M.M.M.M.M.
+..........`),
+    9,
   );
 });
