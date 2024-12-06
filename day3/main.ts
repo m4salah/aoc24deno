@@ -15,10 +15,6 @@ export function parsLine(line: string): number {
 
 // Learn more at https://docs.deno.com/runtime/manual/examples/module_metadata#concepts
 if (import.meta.main) {
-  const lines = (await Deno.readTextFile("./input.txt"))
-    .replace(/\r/g, "")
-    .split("\n")
-    .filter((x) => x != "");
   const result = parsLine(await Deno.readTextFile("./input.txt"));
   console.log(result);
 }
