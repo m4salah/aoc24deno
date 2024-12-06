@@ -18,24 +18,3 @@ if (import.meta.main) {
   const result = parsLine(await Deno.readTextFile("./input.txt"));
   console.log(result);
 }
-
-// const input = await Deno.readTextFile("./input.txt");
-// const lines = input
-//   .replace(/\r/g, "")
-//   .split("\n")
-//   .filter((x) => x != "")
-//   .map((x) => x.matchAll(/(?:mul\((\d+),(\d+)\))|(?:do\(\))|(?:don't\(\))/g));
-//
-// let enabled = true;
-// console.log(
-//   lines.reduce((a, x) => {
-//     let result = 0;
-//     for (let y of x) {
-//       if (y[0] == "don't()") enabled = false;
-//       else if (y[0] == "do()") enabled = true;
-//       else if (enabled) result += parseInt(y[1]) * parseInt(y[2]);
-//     }
-//
-//     return a + result;
-//   }, 0),
-// );
