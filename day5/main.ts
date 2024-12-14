@@ -16,7 +16,6 @@ function solve(input: string) {
     }
   }
 
-  console.log(rulesMap);
   let result = 0;
   for (const line of lines.split("\n")) {
     const ns = line
