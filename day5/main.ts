@@ -30,23 +30,20 @@ function solve(input: string) {
   }
 
   const incroctlyOrderd: number[][] = [];
-  for (const line of lines.split("\n")) {
+  out: for (const line of lines.split("\n")) {
     const ns = line
       .split(",")
       .filter(Boolean)
       .map((n) => parseInt(n));
 
     if (ns.length) {
-      let valid = true;
       for (let i = 0; i < ns.length - 1; i++) {
         const shouldBefore = rulesMap.get(ns[i])!;
         const inter = intersection(shouldBefore, ns.slice(i + 1));
         if (inter.length > 0) {
-          valid = false;
+          incroctlyOrderd.push(ns);
+          continue out;
         }
-      }
-      if (!valid) {
-        incroctlyOrderd.push(ns);
       }
     }
   }
