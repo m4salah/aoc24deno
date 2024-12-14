@@ -1,9 +1,22 @@
-function intersection(a: number[], b: number[]): boolean {
-  return a.filter((value) => b.includes(value)).length > 0;
+function intersection<T>(a: T[], b: T[]): T[] {
+  return a.filter((value) => b.includes(value));
 }
+
+const rulesMap = new Map<number, number[]>();
+
+function normalizeArr(arr: number[]): number[] {
+  for (let i = 0; i < arr.length - 1; i++) {
+    const shouldBefore = rulesMap.get(arr[i])!;
+    const inter = intersection(shouldBefore, arr.slice(i + 1));
+    if (inter.length > 0) {
+      return normalizeArr([...inter, ...arr.filter((n) => !inter.includes(n))]);
+    }
+  }
+  return arr;
+}
+
 function solve(input: string) {
   const [rules, lines] = input.split("\n\n");
-  const rulesMap = new Map<number, number[]>();
   for (const rule of rules.split("\n")) {
     const [before, after] = rule.split("|");
     if (before && after) {
@@ -16,7 +29,7 @@ function solve(input: string) {
     }
   }
 
-  let result = 0;
+  const incroctlyOrderd: number[][] = [];
   for (const line of lines.split("\n")) {
     const ns = line
       .split(",")
@@ -27,17 +40,20 @@ function solve(input: string) {
       let valid = true;
       for (let i = 0; i < ns.length - 1; i++) {
         const shouldBefore = rulesMap.get(ns[i])!;
-        if (intersection(shouldBefore, ns.slice(i + 1))) {
+        const inter = intersection(shouldBefore, ns.slice(i + 1));
+        if (inter.length > 0) {
           valid = false;
         }
       }
-      if (valid) {
-        result += ns[Math.floor(ns.length / 2)];
+      if (!valid) {
+        incroctlyOrderd.push(ns);
       }
     }
   }
 
-  return result;
+  return incroctlyOrderd.map(normalizeArr).reduce((acc, prev) => {
+    return acc + prev[Math.floor(prev.length / 2)];
+  }, 0);
 }
 
 // Learn more at https://docs.deno.com/runtime/manual/examples/module_metadata#concepts
