@@ -1,3 +1,11 @@
+import { delay } from "https://deno.land/x/delay@v0.2.0/mod.ts";
+
+async function renderMap(map: string[][]) {
+  console.clear();
+  console.log(map.map((row) => row.join("     ")).join("\n"));
+  await delay(50);
+}
+
 function isPositionOutsideMap(
   x: number,
   y: number,
@@ -8,11 +16,14 @@ function isPositionOutsideMap(
 }
 
 function isValidMove(x: number, y: number, map: string[][]): boolean {
-  console.log(y, x);
   return map[y][x] != "#";
 }
 
-export function solve(map: string[][], x: number, y: number): string[][] {
+export async function solve(
+  map: string[][],
+  x: number,
+  y: number,
+): Promise<string[][]> {
   const height = map.length;
   const width = map[0].length;
 
@@ -25,7 +36,6 @@ export function solve(map: string[][], x: number, y: number): string[][] {
   let newX = x;
   let newY = y;
 
-  console.log(map[y][x], y, x);
   if (map[y][x] == ">") {
     if (isValidMove(x + 1, y, map)) {
       newMap[y][x] = "X";
@@ -34,7 +44,6 @@ export function solve(map: string[][], x: number, y: number): string[][] {
       newY = y;
     } else {
       newMap[y][x] = "v";
-      return solve(newMap, x, y);
     }
   }
   if (map[y][x] == "<") {
@@ -45,7 +54,6 @@ export function solve(map: string[][], x: number, y: number): string[][] {
       newY = y;
     } else {
       newMap[y][x] = "^";
-      return solve(newMap, x, y);
     }
   }
   if (map[y][x] == "^") {
@@ -56,7 +64,6 @@ export function solve(map: string[][], x: number, y: number): string[][] {
       newY = y - 1;
     } else {
       newMap[y][x] = ">";
-      return solve(newMap, x, y);
     }
   }
   if (map[y][x] == "v") {
@@ -67,14 +74,14 @@ export function solve(map: string[][], x: number, y: number): string[][] {
       newY = y + 1;
     } else {
       newMap[y][x] = "<";
-      return solve(newMap, x, y);
     }
   }
+  await renderMap(newMap);
   return solve(newMap, newX, newY);
 }
 
 if (import.meta.main) {
-  const result = solve(
+  const result = await solve(
     (await Deno.readTextFile("./input.txt")).split("\n").map((row) => {
       const arr = [];
       for (const char of row) {
