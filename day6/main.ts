@@ -2,7 +2,7 @@ import { delay } from "https://deno.land/x/delay@v0.2.0/mod.ts";
 
 async function renderMap(map: string[][]) {
   console.clear();
-  console.log(map.map((row) => row.join("     ")).join("\n"));
+  console.log(map.map((row) => row.join(" ")).join("\n"));
   await delay(50);
 }
 
@@ -92,10 +92,6 @@ if (import.meta.main) {
     67,
     89,
   );
-  for (const row of result) {
-    console.log(row.join(""));
-  }
-
   const count = result.reduce((prev, curr) => {
     return curr.filter((char) => char == "X").length + prev;
   }, 0);
