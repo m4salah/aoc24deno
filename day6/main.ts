@@ -1,9 +1,11 @@
 import { delay } from "https://deno.land/x/delay@v0.2.0/mod.ts";
+import { stdout } from "node:process";
 
 async function renderMap(map: string[][]) {
-  console.clear();
-  console.log(map.map((row) => row.join(" ")).join("\n"));
-  await delay(50);
+  const str = map.map((row) => row.join(" ")).join("\n");
+  stdout.write("\x1b[H\x1b[J");
+  console.log(str);
+  await delay(16);
 }
 
 function isPositionOutsideMap(
@@ -27,57 +29,47 @@ export async function solve(
   const height = map.length;
   const width = map[0].length;
 
-  const newMap = map;
-  if (isPositionOutsideMap(x, y, width, height)) {
-    newMap[y][x] = "X";
-    return newMap;
-  }
-
-  let newX = x;
-  let newY = y;
-
-  if (map[y][x] == ">") {
-    if (isValidMove(x + 1, y, map)) {
-      newMap[y][x] = "X";
-      newMap[y][x + 1] = ">";
-      newX = x + 1;
-      newY = y;
-    } else {
-      newMap[y][x] = "v";
+  while (!isPositionOutsideMap(x, y, width, height)) {
+    if (map[y][x] == ">") {
+      if (isValidMove(x + 1, y, map)) {
+        map[y][x] = "X";
+        map[y][x + 1] = ">";
+        x = x + 1;
+      } else {
+        map[y][x] = "v";
+      }
     }
-  }
-  if (map[y][x] == "<") {
-    if (isValidMove(x - 1, y, map)) {
-      newMap[y][x] = "X";
-      newMap[y][x - 1] = "<";
-      newX = x - 1;
-      newY = y;
-    } else {
-      newMap[y][x] = "^";
+    if (map[y][x] == "<") {
+      if (isValidMove(x - 1, y, map)) {
+        map[y][x] = "X";
+        map[y][x - 1] = "<";
+        x = x - 1;
+      } else {
+        map[y][x] = "^";
+      }
     }
-  }
-  if (map[y][x] == "^") {
-    if (isValidMove(x, y - 1, map)) {
-      newMap[y][x] = "X";
-      newMap[y - 1][x] = "^";
-      newX = x;
-      newY = y - 1;
-    } else {
-      newMap[y][x] = ">";
+    if (map[y][x] == "^") {
+      if (isValidMove(x, y - 1, map)) {
+        map[y][x] = "X";
+        map[y - 1][x] = "^";
+        y = y - 1;
+      } else {
+        map[y][x] = ">";
+      }
     }
-  }
-  if (map[y][x] == "v") {
-    if (isValidMove(x, y + 1, map)) {
-      newMap[y][x] = "X";
-      newMap[y + 1][x] = "v";
-      newX = x;
-      newY = y + 1;
-    } else {
-      newMap[y][x] = "<";
+    if (map[y][x] == "v") {
+      if (isValidMove(x, y + 1, map)) {
+        map[y][x] = "X";
+        map[y + 1][x] = "v";
+        y = y + 1;
+      } else {
+        map[y][x] = "<";
+      }
     }
+    await renderMap(map);
   }
-  await renderMap(newMap);
-  return solve(newMap, newX, newY);
+  map[y][x] = "X";
+  return map;
 }
 
 if (import.meta.main) {
